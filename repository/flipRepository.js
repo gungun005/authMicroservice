@@ -4,6 +4,7 @@ if(process.env.NODE_ENV !== 'production'){
 
 const mongoose = require('mongoose');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const bcrypt = require('bcryptjs');
 //const { resolve } = require('promise');
 
 const client = new MongoClient(process.env.DATABASE_URL, {
@@ -34,18 +35,25 @@ const postFlipRegisters=async(body)=>{
 console.log("in repo");
 console.log(body);
 console.log("Here u can post users who want to register");
+const bcrypt = require('bcryptjs');
+const saltRounds = 5;
+const hashedPassword = await bcrypt.hash(body.password, saltRounds);
 var item = {
     name: body.name,
     email:body.email,
-    password:body.password,
+    password:hashedPassword,
 };
+// console.log("EMAIL ENTERED BY USER",body.email);
+// console.log("PASSWORD",body.password);
+console.log("password entered by user during registration",body.password);
+console.log("Hashed Password during Registration:", hashedPassword);
 try{
     await client.connect()
     const db = client.db("authMicro");
     const coll = db.collection("authMicro");
     const data = await coll.insertOne(item);
     // const data2 = await coll.find().toArray();
-    console.log(data)
+    console.log(data);
     return data.acknowledged == true
 }
 catch(err){
@@ -89,13 +97,18 @@ try{
     await client.connect()
     const db = client.db("authMicro");
     const coll = db.collection("authMicro");
+    const bcrypt=require('bcryptjs');
     // const data = await coll.insertOne(item);
     // const data2 = await coll.find().toArray();
     // console.log(data)
     const foundUser = await coll.findOne({ email: body.email });
     if (foundUser) {
-        if (foundUser.password===body.password){
-            console.log("User found");
+        console.log("Found user password",foundUser.password);
+        // const enteredPasswordHash = await bcrypt.hash(body.password, 5);
+        // console.log("Hashed Entered Password during Login:", enteredPasswordHash);
+        const passwordMatches = await bcrypt.compare(body.password, foundUser.password);
+        if (passwordMatches) {
+            console.log("Password matches. User found");
             return true;
         } else {
             console.log("Password does not match");
