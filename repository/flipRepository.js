@@ -104,8 +104,6 @@ try{
     const foundUser = await coll.findOne({ email: body.email });
     if (foundUser) {
         console.log("Found user password",foundUser.password);
-        // const enteredPasswordHash = await bcrypt.hash(body.password, 5);
-        // console.log("Hashed Entered Password during Login:", enteredPasswordHash);
         const passwordMatches = await bcrypt.compare(body.password, foundUser.password);
         if (passwordMatches) {
             console.log("Password matches. User found");
