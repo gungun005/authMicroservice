@@ -4,6 +4,7 @@ const flipController=require('../controller/flipController');
 router.route('/register')
 .get(flipController.getFlipRegisters)
 .post(flipController.postFlipRegisters)
+.delete(flipController.delFlipUser)
 
 router.route('/login')
 .get(flipController.getFlipLogin)
@@ -11,14 +12,12 @@ router.route('/login')
 
 router.route('/login/forgotpassword')
 .get(flipController.getFlipFpsswrdUser)
-.post(flipController.postFlipFpsswrdUser)
+.patch(flipController.patchFlipFpsswrdUser)
 
 router.route('/login/changepassword')
 .get(flipController.getFlipCpsswrdUser)
-.post(flipController.postFlipCpsswrdUser)
+.patch(flipController.postFlipCpsswrdUser)
 
 
-router.route('/delete')
-.delete(flipController.delFlipUser)
 module.exports=router;
 
