@@ -107,14 +107,15 @@ try{
         const passwordMatches = await bcrypt.compare(body.password, foundUser.password);
         if (passwordMatches) {
             console.log("Password matches. User found");
-            return true;
+            return { success: true, message: 'Login successful' };
         } else {
             console.log("Password does not match");
-            return false;
+            return { success: false, message: 'Invalid credentials' };;
         }
     } else {
         console.log("User not found");
-        return false;
+        return  { success: false, message: 'User not found' };
+        ;
     }
     // return data.acknowledged == true
 
@@ -154,7 +155,8 @@ console.log("in repo");
 console.log(body);
 console.log("any changes by logging user who forgot password");
 var item = {
-    firstname: body.firstname,
+    // name:body.name,
+    email:body.email,
     password:body.password,
     newpassword:body.newpassword,
 };
@@ -162,12 +164,33 @@ try{
     await client.connect()
     const db = client.db("authMicro");
     const coll = db.collection("authMicro");
-    const data = await coll.insertOne(item);
+    //checking ki jo password enter hua hae uska hash 
+    const bcrypt = require('bcryptjs');
+    const saltRounds = 5;
+    const foundUser = await coll.findOne({ email: body.email });
+    if (foundUser) {
+        // console.log("Found user password",foundUser.password);
+        const passwordMatches = await bcrypt.compare(body.password, foundUser.password);
+        if (passwordMatches) {
+            console.log ("user found now changing the password!");
+        } else {
+            console.log("Password does not match");
+        }
+        //newpassword ki hashing
+        const hashedPassword = await bcrypt.hash(body.newpassword, saltRounds);
+        var item = {
+        name: body.name,
+        email:body.email,
+        password:hashedPassword,
+        };
+    const data = await coll.findOneAndUpdate({"email":body.email},{ $set:{"password":hashedPassword}});
     // const data2 = await coll.find().toArray();
     console.log(data)
     return data.acknowledged == true
 }
+}
 catch(err){
+    console.log(err);
     console.log("Error occurred")
     return err;
 }
@@ -196,31 +219,53 @@ finally{
     await client.close()
 } 
 };
-const postFlipCpsswrdUser=async(body)=>{
-console.log("in repo");
-console.log(body);   
-console.log("post flip change pssword user ");
-var item = {
-    firstname: body.firstname,
-    password:body.password,
-    changepassword:body.newpassword,
-};
-try{
-    await client.connect()
-    const db = client.db("authMicro");
-    const coll = db.collection("authMicro");
-    const data = await coll.insertOne(item);
-    // const data2 = await coll.find().toArray();
-    console.log(data)
-    return data.acknowledged == true
-}
-catch(err){
-    console.log("Error occurred")
-    return err;
-}
-finally{
-    await client.close()
-} 
+const patchFlipCpsswrdUser=async(body)=>{
+    console.log("in repo");
+    console.log(body);
+    console.log("any changes by logging user who forgot password");
+    var item = {
+        // name:body.name,
+        email:body.email,
+        password:body.password,
+        newpassword:body.newpassword,
+    };
+    try{
+        await client.connect()
+        const db = client.db("authMicro");
+        const coll = db.collection("authMicro");
+        //checking ki jo password enter hua hae uska hash 
+        const bcrypt = require('bcryptjs');
+        const saltRounds = 5;
+        const foundUser = await coll.findOne({ email: body.email });
+        if (foundUser) {
+            // console.log("Found user password",foundUser.password);
+            const passwordMatches = await bcrypt.compare(body.password, foundUser.password);
+            if (passwordMatches) {
+                console.log ("user found now changing the password!");
+            } else {
+                console.log("Password does not match");
+            }
+            //newpassword ki hashing
+            const hashedPassword = await bcrypt.hash(body.newpassword, saltRounds);
+            var item = {
+            name: body.name,
+            email:body.email,
+            password:hashedPassword,
+            };
+        const data = await coll.findOneAndUpdate({"email":body.email},{ $set:{"password":hashedPassword}});
+        // const data2 = await coll.find().toArray();
+        console.log(data)
+        return data.acknowledged == true
+    }
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error occurred")
+        return err;
+    }
+    finally{
+        await client.close()
+    } 
 };
         
 const delFlipUser=async(body)=>{
@@ -228,8 +273,8 @@ console.log("in repo");
 console.log(body);
 console.log("user deleted!");
 let searchOptions = {};
-if(body.firstname != null && body.firstname !== ""){
-    searchOptions.firstname = body.firstname;
+if(body.email != null && body.email !== ""){
+    searchOptions.email = body.email;
 }
 try{
     await client.connect()
@@ -255,6 +300,6 @@ finally{
         getFlipFpsswrdUser,
         patchFlipFpsswrdUser,
         getFlipCpsswrdUser,
-        postFlipCpsswrdUser,
+        patchFlipCpsswrdUser,
         delFlipUser
     };
