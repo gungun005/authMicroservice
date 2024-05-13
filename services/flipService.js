@@ -32,10 +32,10 @@ console.log(body);
 let getFlipFpsswrdUser=flipRepository.getFlipFpsswrdUser(body);
 return(getFlipFpsswrdUser);
 };
-const postFlipFpsswrdUser=(body)=>{
+const patchFlipFpsswrdUser=(body)=>{
 console.log("in services");
 console.log(body);
-let  postFlipFpsswrdUser=flipRepository.postFlipFpsswrdUser(body);
+let  postFlipFpsswrdUser=flipRepository.patchFlipFpsswrdUser(body);
 return( postFlipFpsswrdUser);
 };
     
@@ -48,7 +48,7 @@ return(getFlipCpsswrdUser);
 const postFlipCpsswrdUser=(body)=>{
 console.log("in services");
 console.log(body);
-let postFlipCpsswrdUser=flipRepository.postFlipCpsswrdUser(body);
+let postFlipCpsswrdUser=flipRepository.patchFlipCpsswrdUser(body);
 return(postFlipCpsswrdUser);
 };
         
@@ -64,7 +64,7 @@ return(delFlipUser);
         getFlipLogin,
         postFlipLogin,
         getFlipFpsswrdUser,
-        postFlipFpsswrdUser,
+        patchFlipFpsswrdUser,
         getFlipCpsswrdUser,
         postFlipCpsswrdUser,
         delFlipUser
