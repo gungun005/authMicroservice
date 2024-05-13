@@ -1,8 +1,8 @@
 const flipService=require('../services/flipService');
-const getFlipRegisters=(req,res)=>{
+const getFlipRegisters=async (req,res)=>{
 console.log("in controller");
 console.log(req.body);
-let getFlipRegisters=flipService.getFlipRegisters(req.body);
+let getFlipRegisters=await flipService.getFlipRegisters(req.body);
 res.send(getFlipRegisters);
 };
 const postFlipRegisters=(req,res)=>{
@@ -27,9 +27,9 @@ console.log(req.body);
 let getFlipFpsswrdUser=flipService.getFlipFpsswrdUser(req.body);
 res.send(getFlipFpsswrdUser);
 };
-const postFlipFpsswrdUser=(req,res)=>{
+const patchFlipFpsswrdUser=(req,res)=>{
 console.log(req.body);
-let postFlipFpsswrdUser=flipService.postFlipFpsswrdUser(req.body);
+let postFlipFpsswrdUser=flipService.patchFlipFpsswrdUser(req.body);
 res.send(postFlipFpsswrdUser);
 };
 
@@ -55,7 +55,7 @@ module.exports={
     getFlipLogin,
     postFlipLogin,
     getFlipFpsswrdUser,
-    postFlipFpsswrdUser,
+    patchFlipFpsswrdUser,
     getFlipCpsswrdUser,
     postFlipCpsswrdUser,
     delFlipUser
