@@ -38,11 +38,11 @@ console.log("Here u can post users who want to register");
 const bcrypt = require('bcryptjs');
 const saltRounds = 5;
 const hashedPassword = await bcrypt.hash(body.password, saltRounds);
-var item = {
-    name: body.name,
-    email:body.email,
-    password:hashedPassword,
-};
+// var item = {
+//     name: body.name,
+//     email:body.email,
+//     password:hashedPassword,
+// };
 // console.log("EMAIL ENTERED BY USER",body.email);
 // console.log("PASSWORD",body.password);
 console.log("password entered by user during registration",body.password);
@@ -51,7 +51,7 @@ try{
     await client.connect()
     const db = client.db("authMicro");
     const coll = db.collection("authMicro");
-    const data = await coll.insertOne(item);
+    const data = await coll.insertOne(body);
     // const data2 = await coll.find().toArray();
     console.log(data);
     return data.acknowledged == true
@@ -73,7 +73,7 @@ try{
     await client.connect()
     const db = client.db("authMicro");
     const coll = db.collection("authMicro");
-    const data = await coll.find().toArray()
+    const data = await coll.find(body).toArray()
     console.log(data)
     return data
 }
@@ -89,10 +89,6 @@ const postFlipLogin=async(body)=>{
 console.log("in rep");
 console.log(body);
 console.log("posting  logged user");
-var item = {
-    email: body.email,
-    password:body.password,
-};
 try{
     await client.connect()
     const db = client.db("authMicro");
@@ -154,12 +150,6 @@ const patchFlipFpsswrdUser=async(body)=>{
 console.log("in repo");
 console.log(body);
 console.log("any changes by logging user who forgot password");
-var item = {
-    // name:body.name,
-    email:body.email,
-    password:body.password,
-    newpassword:body.newpassword,
-};
 try{
     await client.connect()
     const db = client.db("authMicro");
@@ -178,11 +168,7 @@ try{
         }
         //newpassword ki hashing
         const hashedPassword = await bcrypt.hash(body.newpassword, saltRounds);
-        var item = {
-        name: body.name,
-        email:body.email,
-        password:hashedPassword,
-        };
+       
     const data = await coll.findOneAndUpdate({"email":body.email},{ $set:{"password":hashedPassword}});
     // const data2 = await coll.find().toArray();
     console.log(data)
@@ -223,12 +209,6 @@ const patchFlipCpsswrdUser=async(body)=>{
     console.log("in repo");
     console.log(body);
     console.log("any changes by logging user who forgot password");
-    var item = {
-        // name:body.name,
-        email:body.email,
-        password:body.password,
-        newpassword:body.newpassword,
-    };
     try{
         await client.connect()
         const db = client.db("authMicro");
@@ -247,11 +227,6 @@ const patchFlipCpsswrdUser=async(body)=>{
             }
             //newpassword ki hashing
             const hashedPassword = await bcrypt.hash(body.newpassword, saltRounds);
-            var item = {
-            name: body.name,
-            email:body.email,
-            password:hashedPassword,
-            };
         const data = await coll.findOneAndUpdate({"email":body.email},{ $set:{"password":hashedPassword}});
         // const data2 = await coll.find().toArray();
         console.log(data)
