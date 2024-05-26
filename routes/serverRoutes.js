@@ -1,14 +1,16 @@
 const express=require("express");
 const router=express.Router();
 const flipController=require('../controller/flipController');
+const validate = require('../validations/auth.Validation');
+
 router.route('/register')
 .get(flipController.getFlipRegisters)
-.post(flipController.postFlipRegisters)
+.post(validate.authSchemaValidation,flipController.postFlipRegisters)
 .delete(flipController.delFlipUser)
 
 router.route('/login')
 .get(flipController.getFlipLogin)
-.post(flipController.postFlipLogin)
+.post(validate.authSchemaValidation,flipController.postFlipLogin)
 
 router.route('/login/forgotpassword')
 .get(flipController.getFlipFpsswrdUser)
