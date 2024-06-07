@@ -1,9 +1,8 @@
 const { check, validationResult } = require('express-validator');
 
 exports.authSchemaValidation = [
-    check('name').isString(),
     check('email').isEmail(),
-    check('password').isAlphanumeric().isLength(8),
+    check('password').isAlphanumeric(),
 
     (req, res, next) => {
         const errors = validationResult(req);

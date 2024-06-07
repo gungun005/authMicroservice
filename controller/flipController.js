@@ -16,9 +16,9 @@ console.log(req.body);
 let getFlipLogin=flipService.getFlipLogin(req.body);
 res.send(getFlipLogin);
 };
-const postFlipLogin=(req,res)=>{
+const postFlipLogin=async (req,res)=>{
 console.log(req.body);
-let postFlipLogin=flipService.postFlipLogin(req.body);
+let postFlipLogin= await flipService.postFlipLogin(req.body);
 res.send(postFlipLogin);
 };
 
